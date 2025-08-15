@@ -41,23 +41,23 @@ function App() {
     }
   }, [selectedDate]);
 
-  const fetchAvailableSlots = async () => {
-    try {
-      const dateStr = selectedDate.toISOString().split('T')[0];
-      const response = await axios.get(`${BACKEND_URL}/api/available-slots?date=${dateStr}`);
-      setAvailableSlots(response.data);
-    } catch (error) {
-      console.error('Error fetching slots:', error);
-    }
-  };
-
-  const fetchAppointments = async () => {
-    try {
-      const dateStr = selectedDate.toISOString().split('T')[0];
-      const response = await axios.get(`${BACKEND_URL}/api/appointments?date=${dateStr}`);
-      setAppointments(response.data);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
+  const handleDateSelect = async (date) => {
+    if (date) {
+      setSelectedDate(date);
+      setSelectedSlot(null);
+      setLoading(true);
+      try {
+        const dateStr = date.toISOString().split('T')[0];
+        const response = await axios.get(`${BACKEND_URL}/api/available-slots?date=${dateStr}`);
+        setAvailableSlots(response.data);
+        
+        const appointmentsResponse = await axios.get(`${BACKEND_URL}/api/appointments?date=${dateStr}`);
+        setAppointments(appointmentsResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setNotification({ type: 'error', message: 'Erro ao carregar dados para esta data.' });
+      }
+      setLoading(false);
     }
   };
 

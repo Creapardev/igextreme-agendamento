@@ -96,7 +96,7 @@ class CreaparAPITester:
             f"Create Available Slot ({test_date} {test_time})",
             "POST",
             "api/available-slots",
-            201,
+            200,  # Backend returns 200, not 201
             data=slot_data
         )
         

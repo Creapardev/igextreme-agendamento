@@ -122,7 +122,9 @@ function App() {
       await axios.post(`${BACKEND_URL}/api/available-slots`, newSlotForm);
       setNotification({ type: 'success', message: 'Horário criado com sucesso!' });
       setNewSlotForm({ date: '', time: '', type: 'appointment' });
-      fetchAvailableSlots();
+      if (selectedDate && selectedDate.toISOString().split('T')[0] === newSlotForm.date) {
+        await handleDateSelect(selectedDate); // Refresh if viewing the same date
+      }
     } catch (error) {
       setNotification({ type: 'error', message: 'Erro ao criar horário.' });
     }

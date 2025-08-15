@@ -34,12 +34,15 @@ function App() {
     type: 'appointment'
   });
 
+  // Auto-dismiss notifications after 5 seconds
   useEffect(() => {
-    if (selectedDate) {
-      fetchAvailableSlots();
-      fetchAppointments();
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-  }, [selectedDate]);
+  }, [notification]);
 
   const fetchAvailableSlots = async () => {
     try {

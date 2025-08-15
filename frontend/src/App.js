@@ -41,6 +41,26 @@ function App() {
     }
   }, [selectedDate]);
 
+  const fetchAvailableSlots = async () => {
+    try {
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const response = await axios.get(`${BACKEND_URL}/api/available-slots?date=${dateStr}`);
+      setAvailableSlots(response.data);
+    } catch (error) {
+      console.error('Error fetching slots:', error);
+    }
+  };
+
+  const fetchAppointments = async () => {
+    try {
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const response = await axios.get(`${BACKEND_URL}/api/appointments?date=${dateStr}`);
+      setAppointments(response.data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
   const handleDateSelect = async (date) => {
     if (date) {
       setSelectedDate(date);

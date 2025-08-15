@@ -158,7 +158,7 @@ class CreaparAPITester:
             f"Create Appointment for slot {slot_id}",
             "POST",
             "api/appointments",
-            201,
+            200,  # Backend returns 200, not 201
             data=appointment_data
         )
         

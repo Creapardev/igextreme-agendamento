@@ -218,7 +218,7 @@ function App() {
                 <CalendarComponent
                   mode="single"
                   selected={selectedDate}
-                  onSelect={setSelectedDate}
+                  onSelect={handleDateSelect}
                   disabled={(date) => date < new Date(new Date().toDateString())}
                   className="rounded-md border w-full"
                 />

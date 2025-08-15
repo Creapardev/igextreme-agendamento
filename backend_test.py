@@ -226,8 +226,10 @@ def main():
     # Test dates - tomorrow and day after tomorrow
     tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
     day_after = (datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d')
-    test_time_1 = "09:00:00"
-    test_time_2 = "10:30:00"
+    # Use unique times with current timestamp to avoid conflicts
+    current_time = datetime.now()
+    test_time_1 = f"{(current_time.hour + 1) % 24:02d}:{current_time.minute:02d}:00"
+    test_time_2 = f"{(current_time.hour + 2) % 24:02d}:{current_time.minute:02d}:00"
     
     print(f"Using test dates: {tomorrow}, {day_after}")
     print(f"Using test times: {test_time_1}, {test_time_2}")

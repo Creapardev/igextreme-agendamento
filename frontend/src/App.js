@@ -419,7 +419,7 @@ function App() {
                   <CalendarComponent
                     mode="single"
                     selected={selectedDate}
-                    onSelect={setSelectedDate}
+                    onSelect={handleDateSelect}
                     className="rounded-md border w-full"
                   />
                 </CardContent>

@@ -105,8 +105,7 @@ function App() {
       
       setBookingForm({ clientName: '', whatsapp: '', notes: '' });
       setSelectedSlot(null);
-      fetchAvailableSlots();
-      fetchAppointments();
+      await handleDateSelect(selectedDate); // Refresh data for selected date
     } catch (error) {
       setNotification({ 
         type: 'error', 

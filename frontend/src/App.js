@@ -44,6 +44,13 @@ function App() {
     }
   }, [notification]);
 
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots();
+      fetchAppointments();
+    }
+  }, [selectedDate]);
+
   const fetchAvailableSlots = async () => {
     try {
       const dateStr = selectedDate.toISOString().split('T')[0];

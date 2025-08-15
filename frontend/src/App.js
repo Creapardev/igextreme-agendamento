@@ -238,7 +238,11 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3">
-                  {availableSlots.length > 0 ? (
+                  {loading ? (
+                    <div className="col-span-2 text-center py-8 text-gray-500">
+                      Carregando horários...
+                    </div>
+                  ) : availableSlots.length > 0 ? (
                     availableSlots.map((slot) => (
                       <Button
                         key={slot.id}

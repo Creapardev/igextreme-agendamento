@@ -35,8 +35,10 @@ function App() {
   });
 
   useEffect(() => {
-    fetchAvailableSlots();
-    fetchAppointments();
+    if (selectedDate) {
+      fetchAvailableSlots();
+      fetchAppointments();
+    }
   }, [selectedDate]);
 
   const fetchAvailableSlots = async () => {

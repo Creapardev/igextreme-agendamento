@@ -100,6 +100,9 @@ async def send_whatsapp_notification(phone_number: str, message: str):
         if not clean_phone.startswith("55"):
             clean_phone = "55" + clean_phone
         
+        # Build the full URL with instance
+        full_url = f"{WHATSAPP_API_URL}/{WHATSAPP_INSTANCE}"
+        
         headers = {
             "Content-Type": "application/json",
             "apikey": WHATSAPP_API_KEY
@@ -110,9 +113,15 @@ async def send_whatsapp_notification(phone_number: str, message: str):
             "text": message
         }
         
-        print(f"Sending WhatsApp to {clean_phone}: {message[:50]}...")
+        print(f"Sending WhatsApp to {clean_phone}")
+        print(f"URL: {full_url}")
+        print(f"Headers: {headers}")
+        print(f"Payload: {payload}")
         
-        response = requests.post(WHATSAPP_API_URL, json=payload, headers=headers)
+        response = requests.post(full_url, json=payload, headers=headers)
+        
+        print(f"Response status: {response.status_code}")
+        print(f"Response text: {response.text}")
         
         if response.status_code == 200 or response.status_code == 201:
             print("✅ WhatsApp notification sent successfully")

@@ -144,6 +144,27 @@ function App() {
     }
   };
 
+  const handleCreateBulkSchedule = async () => {
+    if (!bulkScheduleForm.start_date) {
+      setNotification({ type: 'error', message: 'Selecione uma data de início.' });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/schedule/bulk-create`, bulkScheduleForm);
+      setNotification({ 
+        type: 'success', 
+        message: `${response.data.message}! Horários padrão criados: Segunda a Sexta (8h-12h, 16h-20h) e Sábado (9h-12h).` 
+      });
+      setBulkScheduleForm({ start_date: '', weeks: 4 });
+      await handleDateSelect(selectedDate); // Refresh current view
+    } catch (error) {
+      setNotification({ type: 'error', message: 'Erro ao criar agenda em lote.' });
+    }
+    setLoading(false);
+  };
+
   const formatTime = (time) => {
     return time.substring(0, 5);
   };

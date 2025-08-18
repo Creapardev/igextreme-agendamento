@@ -260,7 +260,7 @@ async def create_appointment(appointment: AppointmentCreate):
             
             created_appointment = await appointments_collection.find_one({"_id": result.inserted_id})
             
-            # Send WhatsApp notifications
+            # Send WhatsApp notifications (async, non-blocking)
             client_message = f"""✅ *AGENDAMENTO CONFIRMADO*
 
 Olá *{appointment.client_name}*! 👋
@@ -286,9 +286,12 @@ Em caso de dúvidas, entre em contato conosco!"""
 
 _Creapar - Sistema de Agendamento_"""
             
-            # Send notifications (async)
-            asyncio.create_task(send_whatsapp_notification(appointment.whatsapp, client_message))
-            # Para admin, você precisará configurar o número do admin
+            # Send notifications asynchronously (non-blocking)
+            try:
+                asyncio.create_task(send_whatsapp_notification(appointment.whatsapp, client_message))
+                print(f"📱 WhatsApp notification queued for client: {appointment.client_name}")
+            except Exception as e:
+                print(f"⚠️ WhatsApp notification error: {str(e)}")
             
             return serialize_doc(created_appointment)
         else:

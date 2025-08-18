@@ -320,6 +320,60 @@ async def delete_available_slot(slot_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error deleting slot: {str(e)}")
 
+@app.post("/api/schedule/bulk-create")
+async def create_schedule_bulk(schedule: ScheduleWeekCreate):
+    """Create schedule for multiple weeks with default business hours"""
+    try:
+        start_dt = datetime.strptime(schedule.start_date, "%Y-%m-%d")
+        slots_created = 0
+        time_slots = generate_time_slots()
+        
+        for week in range(schedule.weeks):
+            for day in range(7):  # 0=Monday, 6=Sunday
+                current_date = start_dt + timedelta(weeks=week, days=day)
+                date_str = current_date.strftime("%Y-%m-%d")
+                weekday = current_date.weekday()
+                
+                # Skip Sundays (weekday 6)
+                if weekday == 6:
+                    continue
+                
+                # Determine which time slots to use
+                slots_for_day = []
+                if weekday < 5:  # Monday to Friday (0-4)
+                    slots_for_day.extend(time_slots["weekday_morning"])
+                    slots_for_day.extend(time_slots["weekday_afternoon"])
+                elif weekday == 5:  # Saturday (5)
+                    slots_for_day.extend(time_slots["saturday"])
+                
+                # Create slots for this day
+                for time_slot in slots_for_day:
+                    # Check if slot already exists
+                    existing_slot = await available_slots_collection.find_one({
+                        "date": date_str,
+                        "time": time_slot
+                    })
+                    
+                    if not existing_slot:
+                        slot_dict = AvailableSlot(
+                            date=date_str,
+                            time=time_slot,
+                            type="appointment"
+                        ).dict()
+                        
+                        await available_slots_collection.insert_one(slot_dict)
+                        slots_created += 1
+        
+        return {
+            "message": f"Criados {slots_created} horários para {schedule.weeks} semanas",
+            "slots_created": slots_created,
+            "start_date": schedule.start_date,
+            "weeks": schedule.weeks
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating bulk schedule: {str(e)}")
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():

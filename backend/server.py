@@ -252,9 +252,30 @@ async def create_appointment(appointment: AppointmentCreate):
             created_appointment = await appointments_collection.find_one({"_id": result.inserted_id})
             
             # Send WhatsApp notifications
-            client_message = f"✅ *Agendamento Confirmado*\n\nOlá {appointment.client_name}!\n\nSeu agendamento foi confirmado para:\n📅 Data: {appointment.date}\n🕐 Horário: {appointment.time[:5]}\n⏱️ Duração: 30 minutos\n\n_Creapar - Sistema de Agendamento_"
+            client_message = f"""✅ *AGENDAMENTO CONFIRMADO*
+
+Olá *{appointment.client_name}*! 👋
+
+Seu agendamento foi confirmado com sucesso:
+
+📅 *Data:* {datetime.strptime(appointment.date, '%Y-%m-%d').strftime('%d/%m/%Y')}
+🕐 *Horário:* {appointment.time[:5]}
+⏱️ *Duração:* 30 minutos
+
+📍 *Creapar*
+_Sistema de Agendamento_
+
+Em caso de dúvidas, entre em contato conosco!"""
             
-            admin_message = f"🔔 *Novo Agendamento*\n\n👤 Cliente: {appointment.client_name}\n📱 WhatsApp: {appointment.whatsapp}\n📅 Data: {appointment.date}\n🕐 Horário: {appointment.time[:5]}\n📝 Observações: {appointment.notes or 'Nenhuma'}"
+            admin_message = f"""🔔 *NOVO AGENDAMENTO*
+
+👤 *Cliente:* {appointment.client_name}
+📱 *WhatsApp:* {appointment.whatsapp}
+📅 *Data:* {datetime.strptime(appointment.date, '%Y-%m-%d').strftime('%d/%m/%Y')}
+🕐 *Horário:* {appointment.time[:5]}
+📝 *Observações:* {appointment.notes or 'Nenhuma'}
+
+_Creapar - Sistema de Agendamento_"""
             
             # Send notifications (async)
             asyncio.create_task(send_whatsapp_notification(appointment.whatsapp, client_message))

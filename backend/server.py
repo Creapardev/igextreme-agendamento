@@ -29,6 +29,11 @@ MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.creapar_scheduling
 
+# WhatsApp API configuration
+WHATSAPP_API_URL = os.getenv("WHATSAPP_API_URL", "")
+WHATSAPP_INSTANCE = os.getenv("WHATSAPP_INSTANCE", "")
+WHATSAPP_API_KEY = os.getenv("WHATSAPP_API_KEY", "")
+
 # Collections
 available_slots_collection = db.available_slots
 appointments_collection = db.appointments

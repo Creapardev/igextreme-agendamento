@@ -89,23 +89,40 @@ def serialize_docs(docs):
 
 # WhatsApp notification functions
 async def send_whatsapp_notification(phone_number: str, message: str):
-    """Send WhatsApp notification via API"""
+    """Send WhatsApp notification via Evolution API"""
     if not WHATSAPP_API_URL or not WHATSAPP_API_KEY:
         print("WhatsApp API not configured")
         return False
     
     try:
-        headers = {"Authorization": f"Bearer {WHATSAPP_API_KEY}"}
-        payload = {
-            "instance": WHATSAPP_INSTANCE,
-            "phone": phone_number,
-            "message": message
+        # Remove any formatting from phone number and ensure it has country code
+        clean_phone = phone_number.replace("(", "").replace(")", "").replace("-", "").replace(" ", "")
+        if not clean_phone.startswith("55"):
+            clean_phone = "55" + clean_phone
+        
+        headers = {
+            "Content-Type": "application/json",
+            "apikey": WHATSAPP_API_KEY
         }
         
+        payload = {
+            "number": clean_phone,
+            "text": message
+        }
+        
+        print(f"Sending WhatsApp to {clean_phone}: {message[:50]}...")
+        
         response = requests.post(WHATSAPP_API_URL, json=payload, headers=headers)
-        return response.status_code == 200
+        
+        if response.status_code == 200 or response.status_code == 201:
+            print("✅ WhatsApp notification sent successfully")
+            return True
+        else:
+            print(f"❌ WhatsApp API error: {response.status_code} - {response.text}")
+            return False
+            
     except Exception as e:
-        print(f"Error sending WhatsApp notification: {str(e)}")
+        print(f"❌ Error sending WhatsApp notification: {str(e)}")
         return False
 
 def generate_time_slots():

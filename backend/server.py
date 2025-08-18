@@ -412,6 +412,18 @@ async def create_schedule_bulk(schedule: ScheduleWeekCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error creating bulk schedule: {str(e)}")
 
+@app.post("/api/whatsapp/test")
+async def test_whatsapp_notification(phone_number: str, message: str = "Teste de notificação do Creapar! 🎉"):
+    """Test WhatsApp notification"""
+    try:
+        success = await send_whatsapp_notification(phone_number, message)
+        if success:
+            return {"success": True, "message": "Notificação enviada com sucesso!"}
+        else:
+            return {"success": False, "message": "Erro ao enviar notificação"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error testing WhatsApp: {str(e)}")
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():

@@ -87,6 +87,54 @@ def serialize_docs(docs):
     """Convert list of MongoDB documents to list of dicts with string IDs"""
     return [serialize_doc(doc) for doc in docs]
 
+# WhatsApp notification functions
+async def send_whatsapp_notification(phone_number: str, message: str):
+    """Send WhatsApp notification via API"""
+    if not WHATSAPP_API_URL or not WHATSAPP_API_KEY:
+        print("WhatsApp API not configured")
+        return False
+    
+    try:
+        headers = {"Authorization": f"Bearer {WHATSAPP_API_KEY}"}
+        payload = {
+            "instance": WHATSAPP_INSTANCE,
+            "phone": phone_number,
+            "message": message
+        }
+        
+        response = requests.post(WHATSAPP_API_URL, json=payload, headers=headers)
+        return response.status_code == 200
+    except Exception as e:
+        print(f"Error sending WhatsApp notification: {str(e)}")
+        return False
+
+def generate_time_slots():
+    """Generate time slots for scheduling"""
+    slots = []
+    
+    # Segunda a Sexta: 08:00-12:00 e 16:00-20:00
+    weekday_morning = []
+    for hour in range(8, 12):  # 8:00 to 11:30
+        for minute in [0, 30]:
+            weekday_morning.append(f"{hour:02d}:{minute:02d}:00")
+    
+    weekday_afternoon = []
+    for hour in range(16, 20):  # 16:00 to 19:30
+        for minute in [0, 30]:
+            weekday_afternoon.append(f"{hour:02d}:{minute:02d}:00")
+    
+    # Sábado: 09:00-12:00
+    saturday_slots = []
+    for hour in range(9, 12):  # 9:00 to 11:30
+        for minute in [0, 30]:
+            saturday_slots.append(f"{hour:02d}:{minute:02d}:00")
+    
+    return {
+        "weekday_morning": weekday_morning,
+        "weekday_afternoon": weekday_afternoon,
+        "saturday": saturday_slots
+    }
+
 # API Routes
 
 @app.get("/api/health")

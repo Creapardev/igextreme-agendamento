@@ -33,6 +33,10 @@ function App() {
     time: '',
     type: 'appointment'
   });
+  const [bulkScheduleForm, setBulkScheduleForm] = useState({
+    start_date: '',
+    weeks: 4
+  });
 
   // Auto-dismiss notifications after 5 seconds
   useEffect(() => {

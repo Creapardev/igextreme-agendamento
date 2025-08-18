@@ -5,7 +5,7 @@ from datetime import datetime, date, timedelta
 import uuid
 
 class CreaparAPITester:
-    def __init__(self, base_url="https://appointment-hub-44.preview.emergentagent.com"):
+    def __init__(self, base_url="https://32f972e9-79e6-4818-a60c-6758344ed41e.preview.emergentagent.com"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0

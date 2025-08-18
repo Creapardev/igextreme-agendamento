@@ -71,6 +71,10 @@ class AppointmentCreate(BaseModel):
     date: str
     time: str
 
+class ScheduleWeekCreate(BaseModel):
+    start_date: str
+    weeks: int = 4  # Quantas semanas criar
+
 # Helper functions
 def serialize_doc(doc):
     """Convert MongoDB document to dict with string IDs"""

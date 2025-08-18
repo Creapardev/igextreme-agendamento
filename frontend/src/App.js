@@ -407,10 +407,65 @@ function App() {
             </TabsContent>
 
             <TabsContent value="slots" className="space-y-4">
+              {/* Criar agenda em lote */}
+              <Card className="border-green-200 bg-green-50/50">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-green-700">
+                    <Calendar className="h-5 w-5" />
+                    <span>Criar Agenda Padrão (Recomendado)</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Cria automaticamente os horários de Segunda a Sexta (8h-12h, 16h-20h) e Sábado (9h-12h) por várias semanas
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor="bulk_start_date">Data de Início</Label>
+                      <Input
+                        id="bulk_start_date"
+                        type="date"
+                        value={bulkScheduleForm.start_date}
+                        onChange={(e) => setBulkScheduleForm({...bulkScheduleForm, start_date: e.target.value})}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="weeks">Quantas Semanas</Label>
+                      <Input
+                        id="weeks"
+                        type="number"
+                        min="1"
+                        max="12"
+                        value={bulkScheduleForm.weeks}
+                        onChange={(e) => setBulkScheduleForm({...bulkScheduleForm, weeks: parseInt(e.target.value)})}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button 
+                        onClick={handleCreateBulkSchedule} 
+                        className="w-full bg-green-600 hover:bg-green-700 text-white"
+                        disabled={loading}
+                      >
+                        {loading ? 'Criando...' : 'Criar Agenda Padrão'}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="text-sm text-green-700 bg-green-100 p-3 rounded-lg">
+                    <strong>Horários que serão criados:</strong><br/>
+                    • Segunda a Sexta: 08:00-12:00 e 16:00-20:00<br/>
+                    • Sábado: 09:00-12:00<br/>
+                    • Intervalo: 30 minutos entre agendamentos
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Criar horário individual */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Criar Novo Horário</CardTitle>
-                  <CardDescription>Adicione horários disponíveis para agendamento</CardDescription>
+                  <CardTitle>Criar Horário Individual</CardTitle>
+                  <CardDescription>Adicione um horário específico manualmente</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -435,7 +490,7 @@ function App() {
                       />
                     </div>
                     <div className="flex items-end">
-                      <Button onClick={handleCreateSlot} className="w-full">
+                      <Button onClick={handleCreateSlot} className="w-full" variant="outline">
                         Criar Horário
                       </Button>
                     </div>
